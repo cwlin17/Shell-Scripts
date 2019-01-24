@@ -1,0 +1,14 @@
+#!/bin/sh
+
+grep -o '<td>.*</td>' | 
+sed 's/<td>//g' | 
+sed 's/<\/td>//g' | 
+sed '/^$/d' | 
+sed '1~2d' | 
+sed 's/<u>//g' | 
+sed 's/<\/u>//g' |
+tr '[:upper:]' '[:lower:]' | 
+tr "\`" "\'" | 
+tr -s '[, ]' '\n' | 
+grep -v "[^pk\'mnwlhaeiou]" | 
+sort -u

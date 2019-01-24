@@ -1,0 +1,38 @@
+#!/bin/sh
+
+for filename in "$@"
+do
+	if [[ -d "$filename" ]]
+	then
+		directoryfiles=$(find "$filename" -type f)
+		while IFS= read -r line
+		do
+			if [[ -n $(grep -P '[^\x00-\x7F]' "$line") ]]
+			then
+				:
+			else
+				if [[ $(head -1 "$line") == "-*- coding: utf-8 -*-" ]]
+				then
+					echo "$line"
+				fi
+			fi
+		done <<< "$directoryfiles"
+        else
+		if [[ -n $(find . -name "$filename") ]]
+		then
+			foundfiles=$(find . -name "$filename")
+			while IFS= read -r line
+			do
+	                	if [[ -n $(grep -P '[^\x00-\x7F]' "$line") ]]
+        	       		then
+                	        	:
+				else
+					if [[ $(head -1 "$line") == "-*- coding: utf-8 -*-" ]]
+					then
+						echo "$line"
+					fi
+                		fi
+			done <<< "$foundfiles"
+		fi	
+        fi
+done
